@@ -70,8 +70,8 @@ riot.route('/projects/*/*', (project, message) => {
         .then((res) => {
             const omitted = _.omit(res.data.meta, ['project', 'message', 'backtrace', 'event']);
             riot.mount('app', 'overview', {
-                project: project,
-                message: message,
+                project: res.data.meta.project,
+                message: res.data.meta.message,
                 meta: omitted,
                 backtrace: res.data.meta.backtrace,
                 items: res.data.timeline.errors,

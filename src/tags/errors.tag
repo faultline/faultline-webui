@@ -7,7 +7,7 @@
           <table class="table projects-errors">
             <tbody>
               <tr each="{ error, i in opts.errors }">
-                <td><a href="#/projects/{ error.project }/{ error.message }">{ error.message }</a></td>
+                <td><a href="#/projects/{ error.project }/{ encodeURIComponent(error.message) }">{ error.message }</a></td>
                 <td>{ error.type }</td>
                 <td><span class="tag is-danger is-small">{ error.count }</span></td>
                 <td>{ moment(error.lastUpdated).fromNow() }</td>
@@ -59,7 +59,7 @@
       const message = e.item.error.message;
       e.item.error.isLoading = true;
       self.update();
-      req.patch('/projects/' + project + '/errors/' + message, {
+      req.patch('/projects/' + project + '/errors/' + encodeURIComponent(message), {
         status: status
       })
          .then((res) => {
@@ -89,7 +89,7 @@
       }
       e.item.error.isLoading = true;
       self.update();
-      req.delete('/projects/' + project + '/errors/' + message)
+      req.delete('/projects/' + project + '/errors/' + encodeURIComponent(message))
          .then((res) => {
            alert('"' + message + '" has been deleted');
            location.reload();
