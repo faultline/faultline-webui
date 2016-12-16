@@ -45,7 +45,7 @@ riot.route('/projects/*', (project) => {
                 return -1 * parseInt(error.count, 10);
             });
             riot.mount('app', 'errors', {
-                project: project,
+                project: decodeURIComponent(project),
                 errors: sorted,
                 moment: moment,
                 req: req,

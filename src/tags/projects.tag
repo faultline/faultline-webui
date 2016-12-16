@@ -7,7 +7,7 @@
           <table class="table projects">
             <tbody>
               <tr each="{ project, i in opts.projects }">
-                <td><a href="?status=unresolved#/projects/{ project.name }">{ project.name }</a></td>
+                <td><a href="?status=unresolved#/projects/{ encodeURIComponent(project.name) }">{ project.name }</a></td>
                 <td class="has-text-right">
                   <a class={ button: true, btn-delete: true, is-small: true, is-loading: project.isLoading  } onclick={ delete }>
                     <span class="icon is-small">

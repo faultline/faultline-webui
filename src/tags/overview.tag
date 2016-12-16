@@ -2,7 +2,7 @@
   <section class="section">
     <nav class="level">
       <p class="level-item">
-        - <a class="link is-info" href="?status=unresolved#/projects/{ opts.project }">{ opts.project }</a>
+        - <a class="link is-info" href="?status=unresolved#/projects/{ encodeURIComponent(opts.project) }">{ opts.project }</a>
       </p>
     </nav>
 
