@@ -8,13 +8,21 @@
 
     <h1 class="title">{ opts.message }</h1>
     <div class="container">
-      <div each="{ k, v in opts.meta }">
-        <h3>{ k }</h3>
-        <pre><code>{ v }</code></pre>
+      <div>
+        <h3>type</h3>
+        <pre><code>{ opts.type }</code></pre>
+      </div>
+      <div>
+        <h3>timestamp</h3>
+        <pre><code>{ opts.timestamp }</code></pre>
       </div>
       <div>
         <h3>backtrace</h3>
         <pre><code>{ backtrace }</code></pre>
+      </div>
+      <div each="{ k, v in opts.meta }">
+        <h3>{ k }</h3>
+        <pre><code>{ JSON.stringify(v, null, 2) }</code></pre>
       </div>
     </div>
     <div class="container">
