@@ -41,7 +41,7 @@
       }
       e.item.project.isLoading = true;
       self.update();
-      req.delete('/projects/' + project)
+      req.delete('/projects/' + encodeURIComponent(project))
          .then((res) => {
            alert('"' + project + '" has been deleted');
            location.reload();
