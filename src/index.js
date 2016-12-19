@@ -42,7 +42,7 @@ riot.route('/projects/*', (project) => {
     })
         .then((res) => {
             const sorted = _.sortBy(res.data.errors, (error) => {
-                return -1 * parseInt(error.count, 10);
+                return -1 * moment(error.lastUpdated).valueOf();
             });
             riot.mount('app', 'errors', {
                 project: decodeURIComponent(project),
