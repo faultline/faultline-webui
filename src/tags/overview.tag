@@ -6,7 +6,17 @@
       </p>
     </nav>
 
-    <h1 class="title">{ opts.message }</h1>
+    <div class="tile is-ancestor">
+      <div class="tile is-parent">
+        <div class="tile is-child is-8">
+          <h1 class="title">{ opts.message }</h1>
+        </div>
+        <div class="tile is-child is-4 has-text-right">
+          <!-- @TODO buttons -->
+        </div>
+      </div>
+    </div>
+
     <div class="container">
       <div>
         <h3>type</h3>
@@ -25,6 +35,7 @@
         <pre><code>{ JSON.stringify(v, null, 2) }</code></pre>
       </div>
     </div>
+
     <div class="container">
       <h3>timeline [{opts.moment(opts.start).format('YYYY-MM-DDTHH:mm:ssZZ')} - {opts.moment(opts.end).format('YYYY-MM-DDTHH:mm:ssZZ')}]</h3>
       <div id="timeseries">
