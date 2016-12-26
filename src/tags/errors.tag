@@ -1,6 +1,19 @@
 <errors>
   <section class="section">
-    <h1 class="title">{ opts.project }</h1>
+    <div class="tile is-ancestor">
+      <div class="tile is-parent">
+        <div class="tile is-child is-8">
+          <h1 class="title">{ opts.project }</h1>
+        </div>
+        <div class="tile is-child is-4 has-text-right">
+          <a href="?status=#/projects/{ encodeURIComponent(opts.project) }">all</a>
+          |
+          <a href="?status=resolved#/projects/{ encodeURIComponent(opts.project) }">resolved</a>
+          |
+          <a href="?status=unresolved#/projects/{ encodeURIComponent(opts.project) }">unresolved</a>
+        </div>
+      </div>
+    </div>
     <div class="tile is-ancestor">
       <div class="tile is-parent">
         <div class="tile is-child">
@@ -18,13 +31,13 @@
                     </span>
                     <span>{ error.status }</span>
                   </a>
-                  <a if={ error.status == 'resolved' } class={ button: true, is-small: true, is-loading: error.isLoading } onclick={ unresolve }>
+                  <a if={ error.status == 'resolved' } class={ button: true, is-small: true, is-loading: error.isLoading } class="button is-small" onclick={ unresolve }>
                     <span class="icon is-small">
                       <i class="fa fa-check"></i>
                     </span>
                     <span>{ error.status }</span>
                   </a>
-                  <a class={ button: true, btn-delete: true, is-small: true, is-loading: error.isLoading  } onclick={ delete }>
+                  <a class={ button: true, btn-delete: true, is-small: true, is-loading: error.isLoading  } class="button is-small" onclick={ delete }>
                     <span class="icon is-small">
                       <i class="fa fa-times"></i>
                     </span>
