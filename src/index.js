@@ -58,8 +58,14 @@ riot.route('/projects/*', (project) => {
 });
 
 riot.route('/projects/*/*', (project, message) => {
-    const start = moment().startOf('month').format();
-    const end = moment().endOf('month').format();
+    const q = riot.route.query();
+    let start = moment().startOf('month').format();
+    let end = moment().endOf('month').format();
+
+    if (q.hasOwnProperty('start') && q.start && q.hasOwnProperty('end') && q.end) {
+        start = moment(q.start.replace(/#.+$/,''), 'YYYY-MM-DDTHH:mm:ss').format();
+        end = moment(q.end.replace(/#.+$/,''), 'YYYY-MM-DDTHH:mm:ss').format();
+    }
 
     req.get('/projects/' + project + '/errors/' + message, {
         params: {

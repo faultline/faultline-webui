@@ -37,16 +37,37 @@
     </div>
 
     <div class="container">
-      <h3>timeline [{opts.moment(opts.start).format('YYYY-MM-DDTHH:mm:ssZZ')} - {opts.moment(opts.end).format('YYYY-MM-DDTHH:mm:ssZZ')}]</h3>
+      <div class="tile is-ancestor">
+        <div class="tile is-parent">
+          <div class="tile is-child is-4">
+            <h3>timeline</h3>
+          </div>
+          <div class="tile is-child is-8 has-text-right">
+            <p class="period">
+            [
+            <input type="datetime-local" name="start" value="{opts.moment(opts.start).format('YYYY-MM-DDTHH:mm:ss')}"/> - <input type="datetime-local" name="end" value="{opts.moment(opts.end).format('YYYY-MM-DDTHH:mm:ss')}" />
+            ]
+            <a class={ button: true, is-small: true } onclick={ reload }>
+              <span class="icon is-small">
+                <i class="fa fa-refresh"></i>
+              </span>
+            </a>
+            </p>
+          </div>
+        </div>
+      </div>
       <div id="timeseries">
       </div>
     </div>
   </section>
 
   <style scoped>
-    h3 {
+    h3, p.period {
       margin-top: 10px;
       font-weight: bold;
+    }
+    p.period .icon {
+      margin-left: -2px;
     }
     pre code {
       background-color: whitesmoke;
@@ -149,5 +170,12 @@
         }
       });
     });
+
+    self.reload= (e) => {
+      const start = this.start.value;
+      const end = this.end.value;
+      const url = '?start=' + start + '&end=' + end + '#/projects/' + encodeURIComponent(opts.project) + '/' + encodeURIComponent(opts.message);
+      location.href = url;
+    };
   </script>
 </overview>
