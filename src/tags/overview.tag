@@ -24,7 +24,7 @@
       </div>
       <div>
         <h3>timestamp</h3>
-        <pre><code>{ opts.timestamp }</code></pre>
+        <pre><code>{ opts.moment(opts.timestamp).format('YYYY-MM-DDTHH:mm:ssZZ') }</code></pre>
       </div>
       <div>
         <h3>backtrace</h3>
@@ -44,14 +44,14 @@
           </div>
           <div class="tile is-child is-8 has-text-right">
             <p class="period">
-            [
-            <input type="datetime-local" name="start" value="{opts.moment(opts.start).format('YYYY-MM-DDTHH:mm:ss')}"/> - <input type="datetime-local" name="end" value="{opts.moment(opts.end).format('YYYY-MM-DDTHH:mm:ss')}" />
-            ]
-            <a class={ button: true, is-small: true } onclick={ reload }>
-              <span class="icon is-small">
-                <i class="fa fa-refresh"></i>
-              </span>
-            </a>
+              [
+              <input type="datetime-local" name="start" value="{opts.moment(opts.start).format('YYYY-MM-DDTHH:mm:ss')}"/> - <input type="datetime-local" name="end" value="{opts.moment(opts.end).format('YYYY-MM-DDTHH:mm:ss')}" />
+              ]
+              <a class={ button: true, is-small: true } onclick={ reload }>
+                <span class="icon is-small">
+                  <i class="fa fa-refresh"></i>
+                </span>
+              </a>
             </p>
           </div>
         </div>
@@ -59,6 +59,47 @@
       <div id="timeseries">
       </div>
     </div>
+
+    <div class="container">
+      <div class="tile is-ancestor">
+        <div class="tile is-parent">
+          <div class="tile is-child">
+            <h3>occurrences</h3>
+            <table class="table occurrences">
+              <tbody>
+                <tr>
+                  <th>timestamp</th>
+                  <th>message</th>
+                  <th>type</th>
+                  <th>browser</th>
+                  <th>url</th>
+                </tr>
+                <tr each="{ occurrence, k in opts.occurrences }">
+                  <td>
+                    <a href="#/projects/{ encodeURIComponent(occurrence.project) }/errors/{ encodeURIComponent(occurrence.message) }/occurrences/{ occurrence.reversedUnixtime }">
+                      { occurrence.timestamp }
+                    </a>
+                  </td>
+                  <td>
+                    { occurrence.message }
+                  </td>
+                  <td>
+                    { occurrence.type }
+                  </td>
+                  <td>
+                    <i class="fa fa-{ occurrence.context.browser }" title="{ occurrence.context.userAgent }" aria-hidden="true"></i>
+                  </td>
+                  <td>
+                    { occurrence.context.url }
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </section>
 
   <style scoped>
@@ -98,6 +139,32 @@
     this.backtrace = '';
     opts.backtrace.forEach((t) => {
       this.backtrace += t.file + '(' + t.line + ')  ' +  t.function + "\n";
+    });
+
+    // occurrences
+    const detector = {
+      detectBrowserIcon: function(ua) {
+        const parsed = opts.woothee.parse(ua);
+        switch (parsed.name) {
+          case 'Internet Explorer':
+            return 'ie';
+          case 'Edge':
+            return 'edge';
+          case 'Chrome':
+            return 'chrome';
+          case 'Safari':
+            return 'safari';
+          case 'Firefox':
+            return 'firefox';
+          case 'Opera':
+            return 'opera';
+        }
+        return 'question-circle';
+      }
+    };
+    opts.occurrences.forEach((o) => {
+      o.context.browser = detector.detectBrowserIcon(o.context.userAgent);
+      o.timestamp = opts.moment(o.timestamp).format('YYYY-MM-DDTHH:mm:ssZZ');
     });
 
     // timeline

@@ -5,12 +5,14 @@ import _ from 'lodash';
 import axios from 'axios';
 import c3 from 'c3';
 import moment from 'moment';
+import woothee from 'woothee';
 const endpoint = config.endpoint;
 const apiKey = (config.hasOwnProperty('apiKey')) ? config.apiKey: null;
 import riot from 'riot';
 import './tags/projects.tag';
 import './tags/errors.tag';
 import './tags/overview.tag';
+import './tags/occurrence.tag';
 
 const req = axios.create({
     baseURL: endpoint,
@@ -57,7 +59,7 @@ riot.route('/projects/*', (project) => {
         });
 });
 
-riot.route('/projects/*/*', (project, message) => {
+riot.route('/projects/*/errors/*', (project, message) => {
     const q = riot.route.query();
     let start = moment().startOf('month').format();
     let end = moment().endOf('month').format();
@@ -67,30 +69,44 @@ riot.route('/projects/*/*', (project, message) => {
         end = moment(q.end.replace(/#.+$/,''), 'YYYY-MM-DDTHH:mm:ss').format();
     }
 
-    req.get('/projects/' + project + '/errors/' + message, {
-        params: {
-            start: start,
-            end: end
-        }
-    })
+    Promise.all([
+        req.get('/projects/' + project + '/errors/' + message, {
+            params: {
+                start: start,
+                end: end
+            }
+        }),
+        req.get('/projects/' + project + '/errors/' + message + '/occurrences', {
+            params: {
+                after: null,
+                limit: 10
+            }
+        })
+    ])
         .then((res) => {
-            const omitted = _.omit(res.data.meta, [
+            const error = res[0];
+            const occurrences = res[1].data.occurrences;
+            const omitted = _.omit(error.data.meta, [
                 'project',
                 'message',
                 'type',
                 'backtrace',
                 'timestamp',
                 'event',
-                'notifications'
+                'notifications',
+                'reversedUnixtime'
             ]);
+
             riot.mount('app', 'overview', {
-                project: res.data.meta.project,
-                message: res.data.meta.message,
-                type: res.data.meta.type,
+                project: error.data.meta.project,
+                message: error.data.meta.message,
+                type: error.data.meta.type,
                 meta: omitted,
-                backtrace: res.data.meta.backtrace,
-                timestamp: res.data.meta.timestamp,
-                items: res.data.timeline.errors,
+                backtrace: error.data.meta.backtrace,
+                timestamp: error.data.meta.timestamp,
+                occurrences: occurrences,
+                woothee: woothee,
+                items: error.data.timeline.errors,
                 c3: c3,
                 _: _,
                 moment: moment,
@@ -102,6 +118,38 @@ riot.route('/projects/*/*', (project, message) => {
             throw new Error(err);
         });
 });
+
+riot.route('/projects/*/errors/*/occurrences/*', (project, message, reversedUnixtime) => {
+    req.get('/projects/' + project + '/errors/' + message + '/occurrences/' + reversedUnixtime, {
+    })
+        .then((res) => {
+            const error = res;
+            const omitted = _.omit(error.data.meta, [
+                'project',
+                'message',
+                'type',
+                'backtrace',
+                'timestamp',
+                'event',
+                'notifications',
+                'reversedUnixtime'
+            ]);
+
+            riot.mount('app', 'occurrence', {
+                project: error.data.meta.project,
+                message: error.data.meta.message,
+                type: error.data.meta.type,
+                meta: omitted,
+                backtrace: error.data.meta.backtrace,
+                _: _,
+                moment: moment
+            });
+        })
+        .catch((err) => {
+            throw new Error(err);
+        });
+});
+
 
 riot.route(() => {
     location.href = 'index.html#/projects';
