@@ -60,7 +60,7 @@
       </div>
     </div>
 
-    <div class="container">
+    <div if={ occurrences.length } class="container">
       <div class="tile is-ancestor">
         <div class="tile is-parent">
           <div class="tile is-child">
@@ -74,7 +74,7 @@
                   <th>browser</th>
                   <th>url</th>
                 </tr>
-                <tr each="{ occurrence, k in opts.occurrences }">
+                <tr each="{ occurrence, k in occurrences }">
                   <td>
                     <a href="#/projects/{ encodeURIComponent(occurrence.project) }/errors/{ encodeURIComponent(occurrence.message) }/occurrences/{ occurrence.reversedUnixtime }">
                       { occurrence.timestamp }
@@ -91,6 +91,13 @@
                   </td>
                   <td>
                     { occurrence.context.url }
+                  </td>
+                </tr>
+                <tr if={ occurrences.length >= 10 }>
+                  <td class="more" colspan=5>
+                    <a onclick={ more }>
+                      more occurrences
+                    </a>
                   </td>
                 </tr>
               </tbody>
@@ -117,28 +124,18 @@
       overflow-x: auto;
       padding: 16px 20px;
     }
-    .c3-axis-x .tick {
-      display: none;
-    }
-    .faultline-tooltip {
-      padding: 2px;
-      border-style: solid;
-      border-color: blue;
-      border-width: 3px;
-      background-color: white;
-      font-weight: bold;
-    }
-    .faultline-tooltip span {
-      display: block;
-      font-size: x-small;
+    .more {
+      text-align: center;
     }
   </style>
 
   <script type="babel">
+    var self = this;
+
     // backtrace
-    this.backtrace = '';
+    self.backtrace = '';
     opts.backtrace.forEach((t) => {
-      this.backtrace += t.file + '(' + t.line + ')  ' +  t.function + "\n";
+      self.backtrace += t.file + '(' + t.line + ')  ' +  t.function + "\n";
     });
 
     // occurrences
@@ -162,13 +159,32 @@
         return 'question-circle';
       }
     };
-    opts.occurrences.forEach((o) => {
+    self.occurrences = opts.occurrences.map((o) => {
       o.context.browser = detector.detectBrowserIcon(o.context.userAgent);
       o.timestamp = opts.moment(o.timestamp).format('YYYY-MM-DDTHH:mm:ssZZ');
+      return o;
     });
 
+    // more
+    self.more = (e) => {
+      const after = self.occurrences[self.occurrences.length - 1].reversedUnixtime;
+      opts.req.get('/projects/' + opts.project + '/errors/' + opts.message + '/occurrences', {
+        params: {
+          after: after,
+          limit: 10
+        }
+      })
+         .then((res) => {
+           opts.occurrences = opts.occurrences.concat(res.data.occurrences);
+           riot.mount('overview', opts);
+         })
+         .catch((err) => {
+           throw new Error(err);
+         });
+    };
+
     // timeline
-    this.on('updated', () => {
+    self.on('updated', () => {
       const labelX = 'x';
       const labelErrorCount = 'error count';
       let columnX = [labelX];
