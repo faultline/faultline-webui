@@ -98,6 +98,7 @@ riot.route('/projects/*/errors/*', (project, message) => {
             ]);
 
             riot.mount('app', 'overview', {
+                req: req,
                 project: error.data.meta.project,
                 message: error.data.meta.message,
                 type: error.data.meta.type,
