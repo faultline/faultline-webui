@@ -1,6 +1,6 @@
 {
   "name": "faultline-webui",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Sample web UI for faultline",
   "main": "src/index.js",
   "scripts": {
