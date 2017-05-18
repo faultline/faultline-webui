@@ -144,7 +144,7 @@
         const parsed = opts.woothee.parse(ua);
         switch (parsed.name) {
           case 'Internet Explorer':
-            return 'ie';
+            return 'internet-explorer';
           case 'Edge':
             return 'edge';
           case 'Chrome':
