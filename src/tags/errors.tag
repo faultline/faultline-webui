@@ -16,7 +16,7 @@
     </div>
     <div class="tile is-ancestor">
       <div class="tile is-parent">
-        <div class="tile is-child">
+        <div class="tile is-child table-responsive">
           <table class="table projects-errors">
             <tbody>
               <tr each="{ error, i in opts.errors }">

@@ -63,7 +63,7 @@
     <div if={ occurrences.length } class="container">
       <div class="tile is-ancestor">
         <div class="tile is-parent">
-          <div class="tile is-child">
+          <div class="tile is-child table-responsive">
             <h3>occurrences</h3>
             <table class="table occurrences">
               <tbody>
