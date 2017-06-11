@@ -257,7 +257,7 @@
     self.reload= (e) => {
       const start = this.start.value;
       const end = this.end.value;
-      const url = '?start=' + start + '&end=' + end + '#/projects/' + encodeURIComponent(opts.project) + '/' + encodeURIComponent(opts.message);
+      const url = '?start=' + start + '&end=' + end + '#/projects/' + encodeURIComponent(opts.project) + '/errors/' + encodeURIComponent(opts.message);
       location.href = url;
     };
   </script>
