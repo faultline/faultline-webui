@@ -168,7 +168,7 @@
     // more
     self.more = (e) => {
       const after = self.occurrences[self.occurrences.length - 1].reversedUnixtime;
-      opts.req.get('/projects/' + opts.project + '/errors/' + opts.message + '/occurrences', {
+      opts.req.get('/projects/' + encodeURIComponent(opts.project) + '/errors/' + encodeURIComponent(opts.message) + '/occurrences', {
         params: {
           after: after,
           limit: 10
