@@ -7,7 +7,7 @@ import c3 from 'c3';
 import moment from 'moment';
 import woothee from 'woothee';
 const endpoint = config.endpoint;
-const apiKey = (config.hasOwnProperty('apiKey')) ? config.apiKey: null;
+const masterApiKey = (config.hasOwnProperty('masterApiKey')) ? config.masterApiKey: null;
 import riot from 'riot';
 import './tags/projects.tag';
 import './tags/errors.tag';
@@ -17,7 +17,7 @@ import './tags/occurrence.tag';
 const req = axios.create({
     baseURL: endpoint,
     timeout: 120000,
-    headers: {'x-api-key': apiKey}
+    headers: {'x-api-key': masterApiKey}
 });
 
 riot.route('/projects', () => {
