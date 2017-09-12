@@ -101,6 +101,7 @@ riot.route('/projects/*/errors/*', (project, message) => {
                 req: req,
                 project: error.data.meta.project,
                 message: error.data.meta.message,
+                truncatedMessage: message,
                 type: error.data.meta.type,
                 meta: omitted,
                 backtrace: error.data.meta.backtrace,
@@ -139,6 +140,7 @@ riot.route('/projects/*/errors/*/occurrences/*', (project, message, reversedUnix
             riot.mount('app', 'occurrence', {
                 project: error.data.meta.project,
                 message: error.data.meta.message,
+                truncatedMessage: message,
                 type: error.data.meta.type,
                 meta: omitted,
                 backtrace: error.data.meta.backtrace,

@@ -76,7 +76,7 @@
                 </tr>
                 <tr each="{ occurrence, k in occurrences }">
                   <td>
-                    <a href="#/projects/{ encodeURIComponent(occurrence.project) }/errors/{ encodeURIComponent(occurrence.message) }/occurrences/{ occurrence.reversedUnixtime }">
+                    <a href="#/projects/{ encodeURIComponent(occurrence.project) }/errors/{ encodeURIComponent(truncatedMessage) }/occurrences/{ occurrence.reversedUnixtime }">
                       { occurrence.timestamp }
                     </a>
                   </td>
@@ -131,12 +131,12 @@
 
   <script type="babel">
     var self = this;
-
     // backtrace
     self.backtrace = '';
     opts.backtrace.forEach((t) => {
       self.backtrace += t.file + '(' + t.line + ')  ' +  t.function + "\n";
     });
+    self.truncatedMessage = opts.truncatedMessage;
 
     // occurrences
     const detector = {
@@ -168,7 +168,7 @@
     // more
     self.more = (e) => {
       const after = self.occurrences[self.occurrences.length - 1].reversedUnixtime;
-      opts.req.get('/projects/' + encodeURIComponent(opts.project) + '/errors/' + encodeURIComponent(opts.message) + '/occurrences', {
+      opts.req.get('/projects/' + encodeURIComponent(opts.project) + '/errors/' + encodeURIComponent(opts.truncatedMessage) + '/occurrences', {
         params: {
           after: after,
           limit: 10

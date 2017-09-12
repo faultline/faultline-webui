@@ -3,7 +3,7 @@
     <nav class="level">
       <p class="level-item">
         - <a class="link is-info" href="?status=unresolved#/projects/{ encodeURIComponent(opts.project) }">{ opts.project }</a>
-        - <a class="link is-info" href="#/projects/{ encodeURIComponent(opts.project) }/errors/{ encodeURIComponent(opts.message) }">{ opts.message }</a>
+        - <a class="link is-info" href="#/projects/{ encodeURIComponent(opts.project) }/errors/{ encodeURIComponent(opts.truncatedMessage) }">{ opts.message }</a>
         - { opts.moment(opts.timestamp).format('YYYY-MM-DDTHH:mm:ssZZ') }
       </p>
     </nav>
