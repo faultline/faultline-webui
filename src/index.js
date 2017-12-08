@@ -24,7 +24,7 @@ riot.route('/projects', () => {
     req.get('/projects')
         .then((res) => {
             riot.mount('app', 'projects', {
-                projects: res.data.projects,
+                projects: res.data.data.projects,
                 req: req
             });
         })
@@ -43,7 +43,7 @@ riot.route('/projects/*', (project) => {
         params: params
     })
         .then((res) => {
-            const sorted = _.sortBy(res.data.errors, (error) => {
+            const sorted = _.sortBy(res.data.data.errors, (error) => {
                 return -1 * moment(error.lastUpdated).valueOf();
             });
             riot.mount('app', 'errors', {
@@ -84,9 +84,10 @@ riot.route('/projects/*/errors/*', (project, message) => {
         })
     ])
         .then((res) => {
-            const error = res[0];
-            const occurrences = res[1].data.occurrences;
-            const omitted = _.omit(error.data.meta, [
+            const error = res[0].data.data.error;
+            const timeline = res[0].data.data.timeline;
+            const occurrences = res[1].data.data.errors;
+            const omitted = _.omit(error, [
                 'project',
                 'message',
                 'type',
@@ -99,16 +100,16 @@ riot.route('/projects/*/errors/*', (project, message) => {
 
             riot.mount('app', 'overview', {
                 req: req,
-                project: error.data.meta.project,
-                message: error.data.meta.message,
+                project: error.project,
+                message: error.message,
                 truncatedMessage: message,
-                type: error.data.meta.type,
+                type: error.type,
                 meta: omitted,
-                backtrace: error.data.meta.backtrace,
-                timestamp: error.data.meta.timestamp,
+                backtrace: error.backtrace,
+                timestamp: error.timestamp,
                 occurrences: occurrences,
                 woothee: woothee,
-                items: error.data.timeline.errors,
+                items: timeline.errors,
                 c3: c3,
                 _: _,
                 moment: moment,
@@ -125,8 +126,8 @@ riot.route('/projects/*/errors/*/occurrences/*', (project, message, reversedUnix
     req.get('/projects/' + project + '/errors/' + message + '/occurrences/' + reversedUnixtime, {
     })
         .then((res) => {
-            const error = res;
-            const omitted = _.omit(error.data.meta, [
+            const error = res.data.data.error;
+            const omitted = _.omit(error, [
                 'project',
                 'message',
                 'type',
@@ -138,12 +139,12 @@ riot.route('/projects/*/errors/*/occurrences/*', (project, message, reversedUnix
             ]);
 
             riot.mount('app', 'occurrence', {
-                project: error.data.meta.project,
-                message: error.data.meta.message,
+                project: error.project,
+                message: error.message,
                 truncatedMessage: message,
-                type: error.data.meta.type,
+                type: error.type,
                 meta: omitted,
-                backtrace: error.data.meta.backtrace,
+                backtrace: error.backtrace,
                 _: _,
                 moment: moment
             });
