@@ -1,4 +1,4 @@
-# faultline-webui
+# faultline-webui [![GitHub release](https://img.shields.io/github/release/faultline/faultline-webui.svg)]()
 
 > Sample web UI for faultline
 
