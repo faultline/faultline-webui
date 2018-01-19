@@ -76,7 +76,7 @@
                 </tr>
                 <tr each="{ occurrence, k in occurrences }">
                   <td>
-                    <a href="#/projects/{ encodeURIComponent(occurrence.project) }/errors/{ encodeURIComponent(truncatedMessage) }/occurrences/{ occurrence.reversedUnixtime }">
+                    <a href="#/projects/{ occurrence.project }/errors/{ truncatedMessage }/occurrences/{ occurrence.reversedUnixtime }">
                       { occurrence.timestamp }
                     </a>
                   </td>
@@ -168,19 +168,19 @@
     // more
     self.more = (e) => {
       const after = self.occurrences[self.occurrences.length - 1].reversedUnixtime;
-      opts.req.get('/projects/' + encodeURIComponent(opts.project) + '/errors/' + encodeURIComponent(opts.truncatedMessage) + '/occurrences', {
+      opts.req.get('/projects/' + opts.project + '/errors/' + opts.truncatedMessage + '/occurrences', {
         params: {
           after: after,
           limit: 10
         }
       })
-         .then((res) => {
-           opts.occurrences = opts.occurrences.concat(res.data.occurrences);
-           riot.mount('overview', opts);
-         })
-         .catch((err) => {
-           throw new Error(err);
-         });
+          .then((res) => {
+            opts.occurrences = opts.occurrences.concat(res.data.data.errors);
+            riot.mount('overview', opts);
+          })
+          .catch((err) => {
+            throw new Error(err);
+          });
     };
 
     // timeline
