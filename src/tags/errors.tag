@@ -20,7 +20,7 @@
           <table class="table projects-errors">
             <tbody>
               <tr each="{ error, i in opts.errors }">
-                <td><a href="#/projects/{ encodeURIComponent(error.project) }/errors/{ encodeURIComponent(error.message) }">{ error.message }</a></td>
+                <td class="projects-errors-message"><a href="#/projects/{ encodeURIComponent(error.project) }/errors/{ encodeURIComponent(error.message) }">{ error.message }</a></td>
                 <td>{ error.type }</td>
                 <td><span class="tag is-danger is-small">{ error.count }</span></td>
                 <td>{ moment(error.lastUpdated).fromNow() }</td>
@@ -53,6 +53,9 @@
   </section>
 
   <style scoped>
+    .projects-errors-message {
+      word-break: break-all;
+    }
     .tag.is-danger {
       background-color: #EA513C;
     }
