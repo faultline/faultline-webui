@@ -6,6 +6,7 @@ src/
 .gitignore
 Dockerfile
 README.md
+config.js
 config.example.js
 package.json
 ss.png
