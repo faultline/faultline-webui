@@ -12,6 +12,14 @@ Copy [`config.example.js`](config.example.js) to `config.js`. And edit.
 $ open index.html
 ```
 
+### use Docker
+
+```sh
+$ docker build -t faultline-webui:latest .
+$ docker run --rm --name faultline-webui -p 80:80 -v $(pwd)/config.js:/usr/share/nginx/html/config.js faultline-webui:latest
+$ open http://localhost/
+```
+
 ## Contribute
 
 PRs accepted.
